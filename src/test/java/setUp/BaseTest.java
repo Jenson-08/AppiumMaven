@@ -1,9 +1,12 @@
+package setUp;
+
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import pages.PreferencesPage;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -15,8 +18,9 @@ public class BaseTest {
 
     public AndroidDriver driver;
     public AppiumDriverLocalService service;
+    public PreferencesPage preferencesPage;
 
-    @BeforeClass
+    @BeforeMethod
     public void ConfigureAppium() throws MalformedURLException, URISyntaxException {
         service = new AppiumServiceBuilder()
                 .withAppiumJS(new File("C://Users//jenperez1//AppData//Roaming//npm//node_modules//appium//build//lib//main.js"))
@@ -34,9 +38,10 @@ public class BaseTest {
 
         driver = new AndroidDriver(new URI("http://127.0.0.1:4723").toURL(),options);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        preferencesPage = new PreferencesPage(driver);
 
     }
-    @AfterClass
+    @AfterMethod
     public void tearDown(){
         driver.quit();
         service.stop();
