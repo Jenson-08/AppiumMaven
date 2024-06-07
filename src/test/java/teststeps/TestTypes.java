@@ -5,17 +5,15 @@ import io.appium.java_client.AppiumBy;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.RemoteWebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import setUp.BaseTest;
+import setUp.Setup;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.rmi.Remote;
 
-public class PreferencesTest extends BaseTest {
+public class TestTypes extends Setup {
 
     @Test
     public void WifiSettingsName() throws MalformedURLException, URISyntaxException {
@@ -42,8 +40,36 @@ public class PreferencesTest extends BaseTest {
         WebElement ele = driver.findElement((By.xpath("//android.widget.TextView[@text=\"People Names\"]")));
         ((JavascriptExecutor)driver).executeScript("mobile: longClickGesture", ImmutableMap.of("elementId",((RemoteWebElement)ele).getId(),"duration",2000));
         String menuText = driver.findElement(By.id("android:id/title")).getText();
-        Assert.assertEquals(menuText,"Sample Menu");
+        Assert.assertEquals(menuText,"Sample menu");
         Assert.assertTrue(driver.findElement(By.id("android:id/title")).isDisplayed());
+    }
+    @Test
+    public void ScrollDemoTest(){
+        driver.findElement(AppiumBy.accessibilityId("Views")).click();
+        driver.findElement(AppiumBy.androidUIAutomator("new UiScrollable(new UiSelector()).scrollIntoView(text(\"WebView\"));"));
+
+
+
+    }
+    @Test
+    public void SwipeDemoTest(){
+        driver.findElement(AppiumBy.accessibilityId("Views")).click();
+        driver.findElement(AppiumBy.accessibilityId("Gallery")).click();
+        driver.findElement(By.xpath("//android.widget.TextView[@text='1. Photos']")).click();
+        WebElement firstImage = driver.findElement(By.xpath("(//android.widget.ImageView)[1]"));
+        Assert.assertEquals(driver.findElement(By.xpath("(//android.widget.ImageView)[1]")).getAttribute("focusable"), "true");
+
+        ((JavascriptExecutor)driver).executeScript("mobile: swipeGesture",ImmutableMap.of(
+                "elementId", ((RemoteWebElement)firstImage).getId(),
+                "direction", "left",
+                "percent", 0.75
+        ));
+
+
+        Assert.assertEquals(driver.findElement(By.xpath("(//android.widget.ImageView)[1]")).getAttribute("focusable"),"false");
+
+
+
     }
 
 
