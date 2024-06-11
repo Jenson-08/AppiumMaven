@@ -20,6 +20,7 @@ public class TestTypes extends Setup {
 
         //Actual automation
         //Xpath, id, accesibilityId, classname, AndroidUIAutomator
+        driver.findElement(AppiumBy.androidUIAutomator("new UiScrollable(new UiSelector()).scrollIntoView(text(\"Preference\"));"));
         preferencesPage.getPreferencesButton().click();
         driver.findElement(By.xpath("//android.widget.TextView[@content-desc=\"3. Preference dependencies\"]")).click();
         driver.findElement(By.xpath("//android.widget.CheckBox[@resource-id=\"android:id/checkbox\"]")).click();
@@ -34,6 +35,7 @@ public class TestTypes extends Setup {
 
     @Test
     public void LongPressGesture(){
+        driver.findElement(AppiumBy.androidUIAutomator("new UiScrollable(new UiSelector()).scrollIntoView(text(\"Views\"));"));
         driver.findElement(AppiumBy.accessibilityId("Views")).click();
         driver.findElement(By.xpath("//android.widget.TextView[@content-desc=\"Expandable Lists\"]")).click();
         driver.findElement(AppiumBy.accessibilityId("1. Custom Adapter")).click();
@@ -45,6 +47,8 @@ public class TestTypes extends Setup {
     }
     @Test
     public void ScrollDemoTest(){
+        driver.findElement(AppiumBy.androidUIAutomator("new UiScrollable(new UiSelector()).scrollIntoView(text(\"Views\"));"));
+
         driver.findElement(AppiumBy.accessibilityId("Views")).click();
         driver.findElement(AppiumBy.androidUIAutomator("new UiScrollable(new UiSelector()).scrollIntoView(text(\"WebView\"));"));
 
@@ -53,6 +57,7 @@ public class TestTypes extends Setup {
     }
     @Test
     public void SwipeDemoTest(){
+        driver.findElement(AppiumBy.androidUIAutomator("new UiScrollable(new UiSelector()).scrollIntoView(text(\"Views\"));"));
         driver.findElement(AppiumBy.accessibilityId("Views")).click();
         driver.findElement(AppiumBy.accessibilityId("Gallery")).click();
         driver.findElement(By.xpath("//android.widget.TextView[@text='1. Photos']")).click();
@@ -68,8 +73,21 @@ public class TestTypes extends Setup {
 
         Assert.assertEquals(driver.findElement(By.xpath("(//android.widget.ImageView)[1]")).getAttribute("focusable"),"false");
 
+    }
+    @Test
+    public void DragDropTest() throws InterruptedException {
+        driver.findElement(AppiumBy.accessibilityId("Views")).click();
+        driver.findElement(AppiumBy.accessibilityId("Drag and Drop")).click();
+        WebElement source = driver.findElement(By.id("io.appium.android.apis:id/drag_dot_1"));
 
-
+        ((JavascriptExecutor) driver).executeScript("mobile: dragGesture",ImmutableMap.of(
+                "elementId", ((RemoteWebElement)source).getId(),
+                "endX", 619,
+                "endY", 560
+        ));
+        Thread.sleep(3000);
+        String result = driver.findElement(By.id("io.appium.android.apis:id/drag_result_text")).getText();
+        Assert.assertEquals(result, "Dropped!");
     }
 
 
